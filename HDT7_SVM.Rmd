@@ -51,8 +51,8 @@ data <- fread("./train.csv", select = c("OverallQual","OverallCond" ,"GrLivArea"
 #data <- data %>% mutate(Cara = if_else(quant["50%"] <= SalePrice, 1,0))
 
 data$OverallQual[data$OverallQual == 'NaN'] <- 0
-data2 <- data %>% mutate(PriceRange = if_else(quant["0%"] <= SalePrice & SalePrice < quant["25%"], "Economica", 
-                                              if_else(quant["25%"] <= SalePrice & SalePrice < quant["50%"], "Intermedia", "Cara") ))
+data2 <- data %>% mutate(PriceRange = if_else(quant["0%"] <= SalePrice & SalePrice < quant["25%"], 0, 
+                                              if_else(quant["25%"] <= SalePrice & SalePrice < quant["50%"], 1, 2) ))
 data2$SalePrice <- NULL
 
 
@@ -88,9 +88,17 @@ test2<-data2[-corte2,]
 
 
 ```{r}
+modelosvm2<-svm(PriceRange~., data = train2, type = 'C-classification', scale = F)
+
+summary(modelosvm2)
+```
+
+
+```{r}
 modelosvm<-svm(SalePrice~., data = train, scale = F)
 
 summary(modelosvm)
+
 
 
 ```
